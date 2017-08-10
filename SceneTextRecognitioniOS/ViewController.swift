@@ -76,13 +76,21 @@ private func handleDetection(request: VNRequest, error: Error?) {
     }
     textObservations = textResults as! [VNTextObservation]
     DispatchQueue.main.async {
-        self.view.layer.sublayers?.removeSubrange(1...)
+        
+        guard let sublayers = self.view.layer.sublayers else {
+            return
+        }
+        for layer in sublayers[1...] {
+            if (layer as? CATextLayer) == nil {
+                layer.removeFromSuperlayer()
+            }
+        }
         let viewWidth = self.view.frame.size.width
         let viewHeight = self.view.frame.size.height
         for result in textResults {
 
             if let textResult = result {
-
+                
                 let layer = CALayer()
                 var rect = textResult.boundingBox
                 rect.origin.x *= viewWidth
@@ -158,48 +166,57 @@ func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBu
         var yMax: CGFloat = 0
         for rect in rects {
             
-            
-            
             xMin = min(xMin, rect.bottomLeft.x)
             xMax = max(xMax, rect.bottomRight.x)
             yMin = min(yMin, rect.bottomRight.y)
             yMax = max(yMax, rect.topRight.y)
         }
-        var imageRect = CGRect(x: xMin * size.width, y: yMin * size.height, width: (xMax - xMin) * size.width, height: (yMax - yMin) * size.height)
+        let imageRect = CGRect(x: xMin * size.width, y: yMin * size.height, width: (xMax - xMin) * size.width, height: (yMax - yMin) * size.height)
         let context = CIContext(options: nil)
-        let cgImage = context.createCGImage(ciImage, from: imageRect)!
+        guard let cgImage = context.createCGImage(ciImage, from: imageRect) else {
+            continue
+        }
         let uiImage = UIImage(cgImage: cgImage)
         tesseract?.image = uiImage
         tesseract?.recognize()
-        if let text = tesseract?.recognizedText {
-
+        guard var text = tesseract?.recognizedText else {
+            continue
+        }
+        text = text.trimmingCharacters(in: CharacterSet.newlines)
+        if !text.isEmpty {
             let x = xMin
             let y = 1 - yMax
             let width = xMax - xMin
             let height = yMax - yMin
-
-            recognizedTextPositionTuples.append((rect: CGRect(x: x, y: y, width: width, height: height), text: text.trimmingCharacters(in: CharacterSet.newlines)))
+            recognizedTextPositionTuples.append((rect: CGRect(x: x, y: y, width: width, height: height), text: text))
         }
     }
-    if !recognizedTextPositionTuples.isEmpty {
-        DispatchQueue.main.async {
-            let viewWidth = self.view.frame.size.width
-            let viewHeight = self.view.frame.size.height
-            self.view.layer.sublayers?.removeSubrange(1...)
-            for tuple in recognizedTextPositionTuples {
-                let textLayer = CATextLayer()
-                var rect = tuple.rect
-
-                rect.origin.x *= viewWidth
-                rect.size.width *= viewWidth
-                rect.origin.y *= viewHeight
-                rect.size.height *= viewHeight
-
-                textLayer.frame = rect
-                textLayer.string = tuple.text
-                textLayer.foregroundColor = UIColor.red.cgColor
-                self.view.layer.addSublayer(textLayer)
+    DispatchQueue.main.async {
+        let viewWidth = self.view.frame.size.width
+        let viewHeight = self.view.frame.size.height
+        guard let sublayers = self.view.layer.sublayers else {
+            return
+        }
+        for layer in sublayers[1...] {
+            
+            if let _ = layer as? CATextLayer {
+                layer.removeFromSuperlayer()
             }
+        }
+        for tuple in recognizedTextPositionTuples {
+            let textLayer = CATextLayer()
+            textLayer.backgroundColor = UIColor.clear.cgColor
+            var rect = tuple.rect
+
+            rect.origin.x *= viewWidth
+            rect.size.width *= viewWidth
+            rect.origin.y *= viewHeight
+            rect.size.height *= viewHeight
+
+            textLayer.frame = rect
+            textLayer.string = tuple.text
+            textLayer.foregroundColor = UIColor.green.cgColor
+            self.view.layer.addSublayer(textLayer)
         }
     }
 }
