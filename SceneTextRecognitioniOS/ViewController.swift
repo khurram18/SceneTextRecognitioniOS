@@ -10,16 +10,18 @@ import AVFoundation
 import UIKit
 import Vision
 
-
 class ViewController: UIViewController {
 
 override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
+    tesseract?.pageSegmentationMode = .sparseText
+    tesseract?.charWhitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890()-+*!/?.,@#$%&"
     if isAuthorized() {
-        configureCamera()
         configureTextDetection()
+        configureCamera()
     }
+    
 }
 
 override func didReceiveMemoryWarning() {
@@ -32,6 +34,7 @@ private func configureTextDetection() {
 }
 private func configureCamera() {
     preview.session = session
+    
     let cameraDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
     var cameraDevice: AVCaptureDevice?
     for device in cameraDevices.devices {
@@ -71,42 +74,29 @@ private func handleDetection(request: VNRequest, error: Error?) {
     if textResults.isEmpty {
         return
     }
-    let end = CFAbsoluteTimeGetCurrent()
-    print("\(1 / (end - start!))")
+    textObservations = textResults as! [VNTextObservation]
     DispatchQueue.main.async {
         self.view.layer.sublayers?.removeSubrange(1...)
-        for textResult in textResults {
-            self.drawDetectionRegion(region: textResult!)
+        let viewWidth = self.view.frame.size.width
+        let viewHeight = self.view.frame.size.height
+        for result in textResults {
+
+            if let textResult = result {
+
+                let layer = CALayer()
+                var rect = textResult.boundingBox
+                rect.origin.x *= viewWidth
+                rect.size.height *= viewHeight
+                rect.origin.y = ((1 - rect.origin.y) * viewHeight) - rect.size.height
+                rect.size.width *= viewWidth
+
+                layer.frame = rect
+                layer.borderWidth = 2
+                layer.borderColor = UIColor.red.cgColor
+                self.view.layer.addSublayer(layer)
+            }
         }
     }
-}
-private func drawDetectionRegion(region: VNTextObservation) {
-    
-    guard let rects = region.characterBoxes else {
-        return
-    }
-    var xMin = CGFloat.greatestFiniteMagnitude
-    var xMax: CGFloat = 0
-    var yMin = CGFloat.greatestFiniteMagnitude
-    var yMax: CGFloat = 0
-    for rect in rects {
-        xMin = min(xMin, rect.bottomLeft.x)
-        xMax = max(xMax, rect.bottomRight.x)
-        yMin = min(yMin, rect.bottomRight.y)
-        yMax = max(yMax, rect.topRight.y)
-    }
-    let viewWidth = self.view.frame.size.width
-    let viewHeight = self.view.frame.size.height
-    let x = xMin * viewWidth
-    let y = (1 - yMax) * viewHeight
-    let width = (xMax - xMin) * viewWidth
-    let height = (yMax - yMin) * viewHeight
-    
-    let layer = CALayer()
-    layer.frame = CGRect(x: x, y: y, width: width, height: height)
-    layer.borderWidth = 2
-    layer.borderColor = UIColor.red.cgColor
-    view.layer.addSublayer(layer)
 }
 private var preview: PreviewView {
     return view as! PreviewView
@@ -119,8 +109,8 @@ private func isAuthorized() -> Bool {
                                       completionHandler: { (granted:Bool) -> Void in
                                         if granted {
                                             DispatchQueue.main.async {
-                                                self.configureCamera()
                                                 self.configureTextDetection()
+                                                self.configureCamera()
                                             }
                                         }
         })
@@ -132,7 +122,8 @@ private func isAuthorized() -> Bool {
 }
 private var textDetectionRequest: VNDetectTextRectanglesRequest?
 private let session = AVCaptureSession()
-var start: CFAbsoluteTime?
+private var textObservations = [VNTextObservation]()
+private var tesseract = G8Tesseract(language: "eng", engineMode: .tesseractOnly)
 }
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -147,11 +138,69 @@ func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBu
     }
     let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: imageRequestOptions)
     do {
-        start = CFAbsoluteTimeGetCurrent()
         try imageRequestHandler.perform([textDetectionRequest!])
     }
     catch {
         print("Error occured \(error)")
+    }
+    var ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+    let transform = ciImage.orientationTransform(for: CGImagePropertyOrientation(rawValue: 6)!)
+    ciImage = ciImage.transformed(by: transform)
+    let size = ciImage.extent.size
+    var recognizedTextPositionTuples = [(rect: CGRect, text: String)]()
+    for textObservation in textObservations {
+        guard let rects = textObservation.characterBoxes else {
+            continue
+        }
+        var xMin = CGFloat.greatestFiniteMagnitude
+        var xMax: CGFloat = 0
+        var yMin = CGFloat.greatestFiniteMagnitude
+        var yMax: CGFloat = 0
+        for rect in rects {
+            
+            
+            
+            xMin = min(xMin, rect.bottomLeft.x)
+            xMax = max(xMax, rect.bottomRight.x)
+            yMin = min(yMin, rect.bottomRight.y)
+            yMax = max(yMax, rect.topRight.y)
+        }
+        var imageRect = CGRect(x: xMin * size.width, y: yMin * size.height, width: (xMax - xMin) * size.width, height: (yMax - yMin) * size.height)
+        let context = CIContext(options: nil)
+        let cgImage = context.createCGImage(ciImage, from: imageRect)!
+        let uiImage = UIImage(cgImage: cgImage)
+        tesseract?.image = uiImage
+        tesseract?.recognize()
+        if let text = tesseract?.recognizedText {
+
+            let x = xMin
+            let y = 1 - yMax
+            let width = xMax - xMin
+            let height = yMax - yMin
+
+            recognizedTextPositionTuples.append((rect: CGRect(x: x, y: y, width: width, height: height), text: text.trimmingCharacters(in: CharacterSet.newlines)))
+        }
+    }
+    if !recognizedTextPositionTuples.isEmpty {
+        DispatchQueue.main.async {
+            let viewWidth = self.view.frame.size.width
+            let viewHeight = self.view.frame.size.height
+            self.view.layer.sublayers?.removeSubrange(1...)
+            for tuple in recognizedTextPositionTuples {
+                let textLayer = CATextLayer()
+                var rect = tuple.rect
+
+                rect.origin.x *= viewWidth
+                rect.size.width *= viewWidth
+                rect.origin.y *= viewHeight
+                rect.size.height *= viewHeight
+
+                textLayer.frame = rect
+                textLayer.string = tuple.text
+                textLayer.foregroundColor = UIColor.red.cgColor
+                self.view.layer.addSublayer(textLayer)
+            }
+        }
     }
 }
 }

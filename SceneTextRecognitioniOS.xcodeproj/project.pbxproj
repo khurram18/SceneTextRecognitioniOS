@@ -12,7 +12,12 @@
 		202486561F3AE20500CD12E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 202486541F3AE20500CD12E6 /* Main.storyboard */; };
 		202486581F3AE20500CD12E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 202486571F3AE20500CD12E6 /* Assets.xcassets */; };
 		2024865B1F3AE20500CD12E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 202486591F3AE20500CD12E6 /* LaunchScreen.storyboard */; };
+		204D7D101F3C326800209923 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A7BF921F3B259100854C42 /* libstdc++.6.0.9.tbd */; };
+		204D7D111F3C327000209923 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A7BF931F3B259800854C42 /* CoreImage.framework */; };
 		20A7BF891F3AE91200854C42 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A7BF881F3AE91200854C42 /* Preview.swift */; };
+		20A7BF901F3B255000854C42 /* Dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A7BF8F1F3B255000854C42 /* Dummy.m */; };
+		20A7BF911F3B257100854C42 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A7BF8C1F3B250A00854C42 /* TesseractOCR.framework */; };
+		64E9ADE81F2A2436007BAC6F /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 64E9ADE71F2A2436007BAC6F /* tessdata */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,13 @@
 		2024865A1F3AE20500CD12E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2024865C1F3AE20500CD12E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20A7BF881F3AE91200854C42 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
+		20A7BF8C1F3B250A00854C42 /* TesseractOCR.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = "<group>"; };
+		20A7BF8D1F3B254F00854C42 /* SceneTextRecognitioniOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SceneTextRecognitioniOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		20A7BF8E1F3B255000854C42 /* Dummy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dummy.h; sourceTree = "<group>"; };
+		20A7BF8F1F3B255000854C42 /* Dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dummy.m; sourceTree = "<group>"; };
+		20A7BF921F3B259100854C42 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		20A7BF931F3B259800854C42 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		64E9ADE71F2A2436007BAC6F /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +43,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20A7BF911F3B257100854C42 /* TesseractOCR.framework in Frameworks */,
+				204D7D111F3C327000209923 /* CoreImage.framework in Frameworks */,
+				204D7D101F3C326800209923 /* libstdc++.6.0.9.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,8 +55,10 @@
 		202486441F3AE20500CD12E6 = {
 			isa = PBXGroup;
 			children = (
+				20A7BF8C1F3B250A00854C42 /* TesseractOCR.framework */,
 				2024864F1F3AE20500CD12E6 /* SceneTextRecognitioniOS */,
 				2024864E1F3AE20500CD12E6 /* Products */,
+				20A7BF8A1F3B243800854C42 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +73,7 @@
 		2024864F1F3AE20500CD12E6 /* SceneTextRecognitioniOS */ = {
 			isa = PBXGroup;
 			children = (
+				64E9ADE71F2A2436007BAC6F /* tessdata */,
 				202486501F3AE20500CD12E6 /* AppDelegate.swift */,
 				202486521F3AE20500CD12E6 /* ViewController.swift */,
 				202486541F3AE20500CD12E6 /* Main.storyboard */,
@@ -63,8 +81,20 @@
 				202486591F3AE20500CD12E6 /* LaunchScreen.storyboard */,
 				2024865C1F3AE20500CD12E6 /* Info.plist */,
 				20A7BF881F3AE91200854C42 /* Preview.swift */,
+				20A7BF8E1F3B255000854C42 /* Dummy.h */,
+				20A7BF8F1F3B255000854C42 /* Dummy.m */,
+				20A7BF8D1F3B254F00854C42 /* SceneTextRecognitioniOS-Bridging-Header.h */,
 			);
 			path = SceneTextRecognitioniOS;
+			sourceTree = "<group>";
+		};
+		20A7BF8A1F3B243800854C42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				20A7BF931F3B259800854C42 /* CoreImage.framework */,
+				20A7BF921F3B259100854C42 /* libstdc++.6.0.9.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,6 +129,7 @@
 				TargetAttributes = {
 					2024864C1F3AE20500CD12E6 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -129,6 +160,7 @@
 				2024865B1F3AE20500CD12E6 /* LaunchScreen.storyboard in Resources */,
 				202486581F3AE20500CD12E6 /* Assets.xcassets in Resources */,
 				202486561F3AE20500CD12E6 /* Main.storyboard in Resources */,
+				64E9ADE81F2A2436007BAC6F /* tessdata in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +173,7 @@
 			files = (
 				202486531F3AE20500CD12E6 /* ViewController.swift in Sources */,
 				20A7BF891F3AE91200854C42 /* Preview.swift in Sources */,
+				20A7BF901F3B255000854C42 /* Dummy.m in Sources */,
 				202486511F3AE20500CD12E6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,13 +311,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = SceneTextRecognitioniOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = io.devcrew.SceneTextRecognitioniOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "SceneTextRecognitioniOS/SceneTextRecognitioniOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -294,13 +337,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = SceneTextRecognitioniOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = io.devcrew.SceneTextRecognitioniOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "SceneTextRecognitioniOS/SceneTextRecognitioniOS-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
