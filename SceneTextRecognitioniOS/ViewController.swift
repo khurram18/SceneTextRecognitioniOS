@@ -191,6 +191,7 @@ func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBu
             recognizedTextPositionTuples.append((rect: CGRect(x: x, y: y, width: width, height: height), text: text))
         }
     }
+    textObservations.removeAll()
     DispatchQueue.main.async {
         let viewWidth = self.view.frame.size.width
         let viewHeight = self.view.frame.size.height
