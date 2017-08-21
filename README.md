@@ -1,4 +1,4 @@
-![SceneTextRecognitioniOS](https://devcrew.io/wp-content/uploads/2017/08/recog.gif)
+![SceneTextRecognitioniOS](/recognition.gif)
 # SceneTextRecognitioniOS
 A scene text recognition demo app using Vision framework and tesseract
 
