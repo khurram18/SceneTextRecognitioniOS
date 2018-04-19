@@ -132,6 +132,7 @@ private var textDetectionRequest: VNDetectTextRectanglesRequest?
 private let session = AVCaptureSession()
 private var textObservations = [VNTextObservation]()
 private var tesseract = G8Tesseract(language: "eng", engineMode: .tesseractOnly)
+private var font = CTFontCreateWithName("Helvetica" as CFString, 18, nil)
 }
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -207,12 +208,17 @@ func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBu
         for tuple in recognizedTextPositionTuples {
             let textLayer = CATextLayer()
             textLayer.backgroundColor = UIColor.clear.cgColor
+            textLayer.font = self.font
             var rect = tuple.rect
 
             rect.origin.x *= viewWidth
             rect.size.width *= viewWidth
             rect.origin.y *= viewHeight
             rect.size.height *= viewHeight
+            
+            // Increase the size of text layer to show text of large lengths
+            rect.size.width += 100
+            rect.size.height += 100
 
             textLayer.frame = rect
             textLayer.string = tuple.text
