@@ -16,12 +16,12 @@ override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
     tesseract?.pageSegmentationMode = .sparseText
+    // Recognize only these characters
     tesseract?.charWhitelist = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890()-+*!/?.,@#$%&"
     if isAuthorized() {
         configureTextDetection()
         configureCamera()
     }
-    
 }
 
 override func didReceiveMemoryWarning() {
@@ -30,10 +30,10 @@ override func didReceiveMemoryWarning() {
 }
 private func configureTextDetection() {
     textDetectionRequest = VNDetectTextRectanglesRequest(completionHandler: handleDetection)
-    textDetectionRequest!.reportCharacterBoxes = true
+    textDetectionRequest?.reportCharacterBoxes = true
 }
 private func configureCamera() {
-    preview.session = session
+    cameraView.session = session
     
     let cameraDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .back)
     var cameraDevice: AVCaptureDevice?
@@ -59,7 +59,7 @@ private func configureCamera() {
     if session.canAddOutput(videoDataOutput) {
         session.addOutput(videoDataOutput)
     }
-    preview.videoPreviewLayer.videoGravity = .resize
+    cameraView.videoPreviewLayer.videoGravity = .resize
     session.startRunning()
 }
 private func handleDetection(request: VNRequest, error: Error?) {
@@ -106,8 +106,8 @@ private func handleDetection(request: VNRequest, error: Error?) {
         }
     }
 }
-private var preview: PreviewView {
-    return view as! PreviewView
+private var cameraView: CameraView {
+    return view as! CameraView
 }
 private func isAuthorized() -> Bool {
     let authorizationStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
