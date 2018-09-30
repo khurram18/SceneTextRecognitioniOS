@@ -12,7 +12,6 @@
 		202486561F3AE20500CD12E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 202486541F3AE20500CD12E6 /* Main.storyboard */; };
 		202486581F3AE20500CD12E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 202486571F3AE20500CD12E6 /* Assets.xcassets */; };
 		2024865B1F3AE20500CD12E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 202486591F3AE20500CD12E6 /* LaunchScreen.storyboard */; };
-		204D7D101F3C326800209923 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A7BF921F3B259100854C42 /* libstdc++.6.0.9.tbd */; };
 		204D7D111F3C327000209923 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A7BF931F3B259800854C42 /* CoreImage.framework */; };
 		20A7BF891F3AE91200854C42 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A7BF881F3AE91200854C42 /* Preview.swift */; };
 		20A7BF901F3B255000854C42 /* Dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A7BF8F1F3B255000854C42 /* Dummy.m */; };
@@ -45,7 +44,6 @@
 			files = (
 				20A7BF911F3B257100854C42 /* TesseractOCR.framework in Frameworks */,
 				204D7D111F3C327000209923 /* CoreImage.framework in Frameworks */,
-				204D7D101F3C326800209923 /* libstdc++.6.0.9.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +204,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -263,7 +261,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -312,6 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -338,6 +337,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
